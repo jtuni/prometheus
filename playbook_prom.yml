@@ -1,0 +1,27 @@
+---
+#### TODO
+#### que no sigui servei i pilli el port 9990, o fumarme el cockpit
+- hosts: all
+  remote_user: root
+
+  tasks:
+  - name: "Update"
+    command: yum update -y
+
+  - name: "curl prometheus"
+    command: curl -LO url -LO https://github.com/prometheus/prometheus/releases/download/v2.22.0/prometheus-2.22.0.linux-amd64.tar.gz
+
+  - name: "untar prometheus"
+    command: tar xzvf prometheus-2.22.0.linux-amd64.tar.gz 
+
+  - name: "rename"
+    command: mv prometheus-2.22.0.linux-amd64 prometheus-files
+    ignore_errors: true
+
+  - name: "rm tar"  
+    command: rm -rf prometheus-2.22.0.linux-amd64.tar.gz prometheus-2.22.0.linux-amd64 /root/prometheus-files/prometheus-2.22.0.linux-amd64/
+
+  - name: "fuser"
+    command: fuser -k 9090/tcp
+    ignore_errors: true
+  

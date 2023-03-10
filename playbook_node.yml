@@ -1,0 +1,48 @@
+---
+#### TODO
+#### que no sigui servei i pilli el port 9990, o fumarme el cockpit
+- hosts: all
+  remote_user: root
+
+  tasks:
+  - name: "Update"
+    command: yum update -y
+
+  - name: "clean"
+    command: rm -rf node_exporter-1.5.0
+
+  - name: "wget node"
+    command: wget https://github.com/prometheus/node_exporter/archive/refs/tags/v1.5.0.tar.gz
+
+  - name: "untar"
+    command: tar xzvf v1.5.0.tar.gz
+
+  - name: "rm tar"
+    command: rm -rf v1.5.0.tar.gz
+
+  - name: "make"
+    command: chdir=/root/node_exporter-1.5.0 make build
+
+  - name: "mv to /usr/local/bin"
+    command: chdir=/root/node_exporter-1.5.0 mv node_exporter /usr/local/bin
+    ignore_errors: true
+
+  - name: "useradd"
+    command: useradd -rs /bin/false node_exporter
+    ignore_errors: true
+  
+  - name: "create service"
+    command: chdir=/usr/lib/systemd/system wget https://raw.githubusercontent.com/jtuni/prometheus/main/node_exporter.service
+    ignore_errors: true
+  
+  - name: "sed"
+    command: chdir=/usr/lib/systemd/system sed -i 's/User/#User/g' node_exporter.service
+
+  - name: "sed"
+    command: chdir=/usr/lib/systemd/system sed -i 's/Group/#Group/g' node_exporter.service
+
+  - name: "daemon reload"
+    command: systemctl daemon-reload
+
+  - name: "enable now"
+    command: systemctl enable --now node_exporter.service

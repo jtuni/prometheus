@@ -1,0 +1,32 @@
+---
+- hosts: all
+  remote_user: root
+
+  tasks:
+  - name: "Update"
+    command: yum update -y
+
+  - name: "Upgrade"
+    command: yum upgrade -y
+    
+  - name: "cleanup"
+    command: rm -rf /root/*
+    
+  - name: "python"
+    command: yum install python3.9 -y
+
+  - name: "Wget git tar make"
+    command: yum install wget git tar make -y
+
+  - name: "prometheus client"
+    command: pip3 install prometheus-client
+    
+  - name: "golang"
+    command: yum install golang -y
+
+  - name: "Get infiniband exporter"
+    command: git clone https://github.com/guilbaults/infiniband-exporter.git
+    
+  - name: "Get speedtest exporter"
+    command: git clone https://github.com/MiguelNdeCarvalho/speedtest-exporter.git
+

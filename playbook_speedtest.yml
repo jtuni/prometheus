@@ -1,0 +1,17 @@
+---
+- hosts: all
+  remote_user: root
+
+  tasks:
+  - name: "kill 9090"
+    command: fuser -k 9090/tcp
+    ignore_errors: true
+
+  - name: "install reqs"
+    command: chdir=/root/speedtest-exporter/src pip3 install -r requirements.txt
+
+  - name: "repo speedtest"
+    command: curl -s https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.rpm.sh
+
+  - name: "install speedtest"
+    command: yum install speedtest -y
